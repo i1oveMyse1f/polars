@@ -1515,4 +1515,10 @@ impl PyLazyFrame {
             .map_err(PyPolarsErr::from)?;
         Ok(out.into())
     }
+
+    #[cfg(feature = "random")]
+    #[pyo3(signature = (frac, seed=None))]
+    fn sample_frac(&self, frac: f64, seed: Option<u64>) -> Self {
+        self.ldf.clone().sample_frac(frac, seed).into()
+    }
 }

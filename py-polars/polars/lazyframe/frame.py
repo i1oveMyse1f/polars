@@ -1886,9 +1886,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
          └─────────────────────────┴───────┴──────┘)
         """
         for k in _kwargs:
-            if k not in (  # except "private" kwargs
-                "post_opt_callback",
-            ):
+            if k not in ("post_opt_callback",):  # except "private" kwargs
                 error_msg = f"profile() got an unexpected keyword argument '{k}'"
                 raise TypeError(error_msg)
         engine = _select_engine(engine)
@@ -2478,9 +2476,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -2509,9 +2507,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -2539,9 +2537,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         metadata: ParquetMetadata | None = None,
@@ -2819,9 +2817,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -2846,9 +2844,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -2872,9 +2870,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -3099,9 +3097,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -3137,9 +3135,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -3174,9 +3172,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -3439,9 +3437,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -3464,9 +3462,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -3488,9 +3486,9 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         collapse_joins: bool = True,
         no_optimization: bool = False,
         storage_options: dict[str, Any] | None = None,
-        credential_provider: CredentialProviderFunction
-        | Literal["auto"]
-        | None = "auto",
+        credential_provider: (
+            CredentialProviderFunction | Literal["auto"] | None
+        ) = "auto",
         retries: int = 2,
         sync_on_close: SyncOnCloseMethod | None = None,
         mkdir: bool = False,
@@ -5225,6 +5223,44 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
             start_by,
         )
         return LazyGroupBy(lgb)
+
+    def sample_frac(self, frac: float, *, seed: int | None = None) -> LazyFrame:
+        """
+        Sample a fraction of rows from this LazyFrame.
+
+        Parameters
+        ----------
+        frac
+            Fraction of rows to sample (between 0.0 and 1.0).
+        seed
+            Seed for the random number generator. If set to None (default), a
+            random seed is generated for each sample operation.
+
+        Returns
+        -------
+        LazyFrame
+            A new LazyFrame with the sampled rows.
+
+        Examples
+        --------
+        >>> df = pl.LazyFrame({"a": [1, 2, 3, 4, 5], "b": [6, 7, 8, 9, 10]})
+        >>> df.sample_frac(0.5, seed=42).collect()  # doctest: +SKIP
+        shape: (2, 2)
+        ┌─────┬─────┐
+        │ a   ┆ b   │
+        │ --- ┆ --- │
+        │ i64 ┆ i64 │
+        ╞═════╪═════╡
+        │ 3   ┆ 8   │
+        │ 1   ┆ 6   │
+        └─────┴─────┘
+        """
+        if seed is None:
+            import random
+
+            seed = random.randint(0, 10000)
+
+        return self._from_pyldf(self._ldf.sample_frac(frac, seed))
 
     def join_asof(
         self,

@@ -87,6 +87,13 @@ pub enum FunctionIR {
         schema: SchemaRef,
         original: Option<Arc<IRPlan>>,
     },
+    #[cfg(feature = "random")]
+    SampleFrac {
+        frac: f64,
+        seed: Option<u64>,
+        #[cfg_attr(feature = "ir_serde", serde(skip))]
+        schema: CachedSchema,
+    },
 }
 
 impl Eq for FunctionIR {}
@@ -120,6 +127,19 @@ impl PartialEq for FunctionIR {
             #[cfg(feature = "pivot")]
             (Unpivot { args: l, .. }, Unpivot { args: r, .. }) => l == r,
             (RowIndex { name: l, .. }, RowIndex { name: r, .. }) => l == r,
+            #[cfg(feature = "random")]
+            (
+                SampleFrac {
+                    frac: frac_l,
+                    seed: seed_l,
+                    ..
+                },
+                SampleFrac {
+                    frac: frac_r,
+                    seed: seed_r,
+                    ..
+                },
+            ) => frac_l == frac_r && seed_l == seed_r,
             _ => false,
         }
     }
@@ -166,6 +186,15 @@ impl Hash for FunctionIR {
                 name.hash(state);
                 offset.hash(state);
             },
+            #[cfg(feature = "random")]
+            FunctionIR::SampleFrac {
+                frac,
+                seed,
+                schema: _,
+            } => {
+                frac.to_bits().hash(state);
+                seed.hash(state);
+            },
         }
     }
 }
@@ -183,6 +212,8 @@ impl FunctionIR {
             #[cfg(feature = "python")]
             OpaquePython(OpaquePythonUdf { streamable, .. }) => *streamable,
             RowIndex { .. } => false,
+            #[cfg(feature = "random")]
+            SampleFrac { .. } => true,
         }
     }
 
@@ -208,6 +239,8 @@ impl FunctionIR {
             Rechunk | Unnest { .. } | Rename { .. } | Explode { .. } => true,
             RowIndex { .. } | FastCount { .. } => false,
             Pipeline { .. } => unimplemented!(),
+            #[cfg(feature = "random")]
+            SampleFrac { .. } => false,
         }
     }
 
@@ -222,6 +255,8 @@ impl FunctionIR {
             Unpivot { .. } => true,
             RowIndex { .. } => true,
             Pipeline { .. } => unimplemented!(),
+            #[cfg(feature = "random")]
+            SampleFrac { .. } => false,
         }
     }
 
@@ -280,6 +315,11 @@ impl FunctionIR {
                 df.unpivot2(args)
             },
             RowIndex { name, offset, .. } => df.with_row_index(name.clone(), *offset),
+            #[cfg(feature = "random")]
+            SampleFrac { frac, seed, .. } => {
+                let n = (df.height() as f64 * frac) as usize;
+                df.sample_n_literal(n, false, false, *seed)
+            },
         }
     }
 

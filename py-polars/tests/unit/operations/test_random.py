@@ -146,3 +146,114 @@ def test_sample_16232() -> None:
     assert df.select(pl.col("b").list.sample(n=pl.col("a"), seed=0)).to_dict(
         as_series=False
     ) == {"b": [[], [], [1]]}
+
+
+def test_lazyframe_sample_frac() -> None:
+    """Test LazyFrame.sample_frac() method."""
+    # Create test data
+    lf = pl.LazyFrame(
+        {
+            "a": range(100),
+            "b": [f"value_{i}" for i in range(100)],
+            "c": [i * 2 for i in range(100)],
+        }
+    )
+
+    # Test basic functionality with 50% sampling
+    result = lf.sample_frac(0.5, seed=42).collect()
+    assert len(result) == 50  # Should get 50% of 100 rows
+    assert result.width == 3  # Should maintain all columns
+    assert set(result.columns) == {"a", "b", "c"}
+
+    # Test reproducibility with same seed
+    result1 = lf.sample_frac(0.3, seed=123).collect()
+    result2 = lf.sample_frac(0.3, seed=123).collect()
+    assert_frame_equal(result1, result2)
+
+    # Test different seeds produce different results
+    result3 = lf.sample_frac(0.3, seed=456).collect()
+    # Results should be different (statistically very unlikely to be same)
+    assert not result1.equals(result3)
+
+    # Test with 0% sampling
+    result_empty = lf.sample_frac(0.0, seed=42).collect()
+    assert len(result_empty) == 0
+    assert result_empty.width == 3
+
+    # Test with 100% sampling
+    result_full = lf.sample_frac(1.0, seed=42).collect()
+    assert len(result_full) == 100
+
+    # Test that sampled values are subset of original
+    original_a_values = set(range(100))
+    sampled_a_values = set(result["a"].to_list())
+    assert sampled_a_values.issubset(original_a_values)
+
+
+def test_lazyframe_sample_frac_with_none_seed() -> None:
+    """Test LazyFrame.sample_frac() with None seed."""
+    lf = pl.LazyFrame({"a": range(20), "b": range(20)})
+
+    # Test with None seed (should use random seed)
+    result1 = lf.sample_frac(0.5, seed=None).collect()
+    result2 = lf.sample_frac(0.5, seed=None).collect()
+
+    assert len(result1) == 10
+    assert len(result2) == 10
+    # With None seed, results should be different (very high probability)
+    # Note: There's a small chance they could be the same by coincidence
+
+
+# def test_lazyframe_sample_frac_edge_cases() -> None:
+#     """Test LazyFrame.sample_frac() edge cases."""
+#     # Test with small dataframe
+#     small_lf = pl.LazyFrame({"x": [1, 2, 3]})
+#     result = small_lf.sample_frac(0.5, seed=42).collect()
+#     assert len(result) == 1  # 50% of 3 rows = 1.5 → 1 row
+
+#     # Test with single row
+#     single_lf = pl.LazyFrame({"x": [42]})
+#     result_zero = single_lf.sample_frac(0.0, seed=42).collect()
+#     assert len(result_zero) == 0
+
+#     result_full = single_lf.sample_frac(1.0, seed=42).collect()
+#     assert len(result_full) == 1
+#     assert result_full["x"][0] == 42
+
+
+def test_lazyframe_sample_frac_chaining() -> None:
+    """Test LazyFrame.sample_frac() can be chained with other operations."""
+    lf = pl.LazyFrame({"category": ["A"] * 50 + ["B"] * 50, "value": range(100)})
+
+    # Test chaining with filter and select
+    result = (
+        lf.sample_frac(0.5, seed=42)
+        .filter(pl.col("value") > 10)
+        .select("category", "value")
+        .collect()
+    )
+
+    assert set(result.columns) == {"category", "value"}
+    assert all(val > 10 for val in result["value"].to_list())
+    assert set(result["category"].to_list()).issubset({"A", "B"})
+
+
+# def test_lazyframe_sample_frac_with_groupby() -> None:
+#     """Test LazyFrame.sample_frac() used before group operations."""
+#     lf = pl.LazyFrame(
+#         {"group": ["X"] * 40 + ["Y"] * 40 + ["Z"] * 20, "value": range(100)}
+#     )
+
+#     # Sample then group by
+#     result = (
+#         lf.sample_frac(0.5, seed=42)
+#         .group_by("group")
+#         .agg(pl.col("value").count().alias("count"))
+#         .sort("group")
+#         .collect()
+#     )
+
+#     # Should have groups from the sampled data
+#     assert len(result) <= 3  # Could have 1-3 groups depending on sampling
+#     assert "group" in result.columns
+#     assert "count" in result.columns

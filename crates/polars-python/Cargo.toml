@@ -137,6 +137,7 @@ iejoin = ["polars/iejoin"]
 cross_join = ["polars/cross_join"]
 pct_change = ["polars/pct_change"]
 repeat_by = ["polars/repeat_by"]
+random = ["polars/random"]
 
 streaming = ["polars/streaming"]
 meta = ["polars/meta"]
@@ -229,6 +230,7 @@ operations = [
   "hist",
   "find_many",
   "string_normalize",
+  "random",
 ]
 
 io = [

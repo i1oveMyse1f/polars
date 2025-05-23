@@ -2202,6 +2202,34 @@ impl LazyFrame {
         };
         Ok(LazyFrame::from_logical_plan(lp, self.opt_state))
     }
+
+    /// Sample a fraction of rows from this LazyFrame.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use polars_core::prelude::*;
+    /// use polars_lazy::prelude::*;
+    ///
+    /// fn example(df: DataFrame) -> LazyFrame {
+    ///       df.lazy()
+    ///         .sample_frac(0.5, Some(42))
+    /// }
+    /// ```
+    #[cfg(feature = "random")]
+    pub fn sample_frac(self, frac: f64, seed: Option<u64>) -> LazyFrame {
+        let opt_state = self.get_opt_state();
+        let function = FunctionIR::SampleFrac {
+            frac,
+            seed,
+            schema: Default::default(),
+        };
+        let lp = self
+            .get_plan_builder()
+            .map_private(DslFunction::FunctionIR(function))
+            .build();
+        Self::from_logical_plan(lp, opt_state)
+    }
 }
 
 /// Utility struct for lazy group_by operation.

@@ -631,6 +631,10 @@ pub(crate) fn into_py(py: Python<'_>, plan: &IR) -> PyResult<PyObject> {
 
                     ("fast_count", sources, scan_type, alias).into_py_any(py)?
                 },
+                #[cfg(feature = "random")]
+                FunctionIR::SampleFrac { frac, seed, .. } => {
+                    ("sample_frac", *frac, *seed).into_py_any(py)?
+                },
             },
         }
         .into_py_any(py),

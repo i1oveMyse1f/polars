@@ -97,6 +97,8 @@ impl FunctionIR {
             Explode { schema, columns } => explode_schema(schema, input_schema, columns),
             #[cfg(feature = "pivot")]
             Unpivot { schema, args } => unpivot_schema(args, schema, input_schema),
+            #[cfg(feature = "random")]
+            SampleFrac { .. } => Ok(Cow::Borrowed(input_schema)),
         }
     }
 }
